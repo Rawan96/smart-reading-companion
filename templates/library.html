@@ -1,0 +1,84 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <h1>📚 My Library</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <div class="flash-messages">
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %} {% endwith %}
+
+  <form action="{{ url_for('add_book') }}" method="POST" class="add-book-form">
+    <input type="text" name="title" placeholder="Book Title" required />
+    <input type="text" name="author" placeholder="Author" required />
+    <input
+      type="number"
+      name="total_pages"
+      placeholder="Total Pages"
+      required
+    />
+    <input type="text" name="genre" placeholder="Genre" required />
+    <button type="submit">Add Book</button>
+  </form>
+
+  <hr />
+
+  {% if books %}
+  <table class="library-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Progress</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.genre }}</td>
+        <td>
+          {{ book.pages_read }}/{{ book.total_pages }} ({{
+          book.progress_percentage() }}%)
+        </td>
+        <td>
+          {% if book.pages_read < book.total_pages %}
+          <form
+            action="{{ url_for('update_progress', title=book.title) }}"
+            method="POST"
+            style="display: inline"
+          >
+            <input
+              type="number"
+              name="pages"
+              min="1"
+              max="{{ book.total_pages - book.pages_read }}"
+              placeholder="Pages read"
+              required
+            />
+            <button type="submit">Update</button>
+          </form>
+          {% else %}
+          <span class="completed">Completed</span>
+          {% endif %}
+          <a
+            href="{{ url_for('delete_book', title=book.title) }}"
+            onclick="return confirm('Delete this book?')"
+            >🗑️</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No books added yet. Add one above!</p>
+  {% endif %}
+</div>
+{% endblock %}
