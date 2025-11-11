@@ -72,6 +72,9 @@
             onclick="return confirm('Delete this book?')"
             >🗑️</a
           >
+          <a href="{{ url_for('book_detail', title=book.title) }}"
+            >View Details</a
+          >
         </td>
       </tr>
       {% endfor %}
