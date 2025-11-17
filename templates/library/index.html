@@ -1,0 +1,57 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+  <!-- Header -->
+  <div class="library-header">
+    <div class="library-title">
+      <h1>My Library</h1>
+      <p>{{ books|length }} books in your collection</p>
+    </div>
+    <div class="library-controls">
+      <div class="view-mode">
+        <button class="view-btn" id="listViewBtn">
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button class="view-btn" id="gridViewBtn">
+          <i class="fa-solid fa-table-cells"></i>
+        </button>
+      </div>
+      <button id="addBookBtn" class="add-book-btn">
+        <span class="plus-icon"><i class="fa-solid fa-plus"></i></span> Add Book
+      </button>
+    </div>
+  </div>
+
+  {% include "library/_flash.html" %} {% include "library/_modal.html" %}
+
+  <!-- Search Bar -->
+  <div class="search-filter">
+    <div class="search-box">
+      <span class="search-icon"
+        ><i class="fa-solid fa-magnifying-glass"></i
+      ></span>
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search books or authors..."
+        class="search-input"
+        autocomplete="off"
+      />
+    </div>
+    <div class="filter-buttons">
+      <button class="filter-btn">All</button>
+      <button class="filter-btn">Reading</button>
+      <button class="filter-btn">Completed</button>
+      <button class="filter-btn">To Read</button>
+    </div>
+  </div>
+
+  {% include "library/_list_view.html" %} {% include "library/_grid_view.html"
+  %}
+</div>
+<script>
+  // Pass edit_book from Flask to JS
+  const editBook = {{ 'true' if edit_book else 'false' }};
+</script>
+<script src="{{ url_for('static', filename='js/library.js') }}"></script>
+{% endblock %}

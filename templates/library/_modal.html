@@ -1,0 +1,21 @@
+<div id="addBookModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ edit_book and "Edit Book" or "Add New Book" }}</h2>
+      <i class="fa-solid fa-xmark close-modal" onclick="closeModal()"></i>
+    </div>
+    <p class="description">
+      {{ edit_book and "Update the book details below." or "Add a new book to
+      your library. Fill in the details below." }}
+    </p>
+
+    <form
+      action="{{ url_for('book.edit_book', title=edit_book.title) if edit_book else url_for('book.add_book') }}"
+      method="POST"
+      class="add-book-form"
+      enctype="multipart/form-data"
+    >
+      {% include "library/_modal_form_fields.html" %}
+    </form>
+  </div>
+</div>
