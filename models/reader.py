@@ -1,57 +1,144 @@
+import os
+import json
 from datetime import datetime
+from models.book import Book
+from werkzeug.security import generate_password_hash, check_password_hash
+
+BOOKS_FILE = "users.json"
 
 class Reader:
-    def __init__(self, name):
+    def __init__(self,  name, email, password_hash=None, books=None,reading_log=None):
         self.name = name
-        self.books = []
-        self.reading_log = []
+        self.email = email
+        self.password_hash = password_hash
+        self.books = books if books else []
+        self.reading_log = reading_log if reading_log else []
 
-    def add_book(self, book):
-        self.books.append(book)
+    @classmethod
+    def create_user(cls, name, email, password):
+        if cls.find_by_email(email):
+            return None  # already exists
+        password_hash = generate_password_hash(password)
+        reader = cls(name, email, password_hash)
+        reader.save_reader()
+        return reader
 
-    def remove_book(self, title):
-        self.books = [book for book in self.books if book.title != title]
+    def check_password(self, password):
+        if not self.password_hash:
+            return False
+        return check_password_hash(self.password_hash, password)
+
+    @staticmethod
+    def find_by_email(email):
+        try:
+            with open("users.json", "r") as f:
+                users = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            users = []
+        for u in users:
+            if u.get("email") == email:
+                return Reader(
+                    name=u["name"],
+                    email=u["email"],
+                    password_hash=u.get("password"),
+                    books=[Book.from_dict(b) for b in u.get("books", [])],
+                    reading_log=u.get("reading_log", [])
+                )
+        return None
+
+    def save_reader(self):
+        try:
+            with open("users.json", "r") as f:
+                users = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            users = []
+
+        for u in users:
+            if u.get("email") == self.email:
+                u["name"] = self.name
+                u["password"] = self.password_hash
+                u["books"] = [b.to_dict() for b in self.books]
+                u["reading_log"] = self.reading_log
+                break
+        else:
+            users.append({
+                "name": self.name,
+                "email": self.email,
+                "password": self.password_hash,
+                "books": [b.to_dict() for b in self.books],
+                "reading_log": self.reading_log
+            })
+
+        with open("users.json", "w") as f:
+            json.dump(users, f, indent=4)
 
 
-    def log_reading(self, book_title, pages):
+
+
+    def load_books(self):
+        try:
+            with open(BOOKS_FILE, "r") as f:
+                data = json.load(f)
+                self.books = [Book.from_dict(b) for b in data]
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.books = []
+
+    def save_books(self):
+        with open(BOOKS_FILE, "w") as f:
+            json.dump([b.to_dict() for b in self.books], f, indent=4)
+
+    def add_book(self, title, author, total_pages, genre):
+        if any(b.title == title for b in self.books):
+            return False
+        new_book = Book(title, author, total_pages, genre)
+        self.books.append(new_book)
+        self.save_books()
+        return True
+
+    def find_book(self, title):
+        return next((b for b in self.books if b.title == title), None)
+
+    def delete_book(self, title):
+        self.books = [b for b in self.books if b.title != title]
+        self.save_books()
+
+    def log_reading(self, title, pages):
         if pages <= 0:
-         raise ValueError("pages must be positive")
+            raise ValueError("Pages must be positive")
 
-        book = next((b for b in self.books if b.title == book_title), None)
-        if book is None:
+        book = self.find_book(title)
+        if not book:
             return False
 
 
-        today_str = datetime.now().strftime("%Y-%m-%d")
-
-        for session in book.reading_sessions:
-            if session['date'] == today_str:
-                session['pages'] += pages
-                break
-
-        else:
-            book.reading_sessions.append({"date": today_str, "pages": pages})
-
         book.add_pages(pages)
-        if book.pages_read > book.total_pages:
-            book.pages_read = book.total_pages
-
 
         self.reading_log.append({
-            "book": book_title,
+            "book": title,
             "pages": pages,
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         })
 
+        self.save_books()
         return True
 
 
-    def total_books(self):
-        return len(self.books)
 
-    def completed_books(self):
-        finished_books = []
-        for book in self.books:
-            if book.pages_read == book.total_pages:
-                finished_books.append(book)
-        return finished_books
+    @staticmethod
+    def load_reader(email):
+        try:
+            with open("users.json", "r") as f:
+                users = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            users = []
+
+        for u in users:
+            if u.get("email") == email:
+                return Reader(
+                    name=u["name"],
+                    email=u["email"],
+                    password_hash=u.get("password"),
+                    books=[Book.from_dict(b) for b in u.get("books", [])],
+                    reading_log=u.get("reading_log", [])
+                )
+        return None
