@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <h1>{{ book.title }} 📖</h1>
+  <p><strong>Author:</strong> {{ book.author }}</p>
+  <p><strong>Genre:</strong> {{ book.genre }}</p>
+  <p>
+    <strong>Pages:</strong> {{ book.pages_read }}/{{ book.total_pages }} ({{
+    book.progress_percentage() }}%)
+  </p>
+
+  <hr />
+
+  <h2>Add a Note / Highlight</h2>
+  <form action="{{ url_for('book_detail', title=book.title) }}" method="POST">
+    <textarea
+      name="note"
+      rows="3"
+      placeholder="Write your note here..."
+      required
+    ></textarea>
+    <button type="submit">Add Note</button>
+  </form>
+
+  <hr />
+
+  <h2>Notes & Highlights</h2>
+  {% if book.notes %}
+  <ul>
+    {% for note in book.notes %}
+    <li>{{ note }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No notes yet. Add one above!</p>
+  {% endif %}
+
+  <hr />
+
+  <h2>Reading Progress Over Time</h2>
+  <canvas id="readingChart" width="400" height="200"></canvas>
+  <p>
+    <strong>Total pages read (all books):</strong> {{
+    analytics.total_pages_read() }}
+  </p>
+  <p>
+    <strong>Average pages/day:</strong> {{ analytics.average_pages_per_day() }}
+  </p>
+</div>
+{% endblock %}

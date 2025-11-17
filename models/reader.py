@@ -14,24 +14,37 @@ class Reader:
 
 
     def log_reading(self, book_title, pages):
-        book = None
-        for b in self.books:
-            if b.title == book_title:
-                book = b
+        if pages <= 0:
+         raise ValueError("pages must be positive")
+
+        book = next((b for b in self.books if b.title == book_title), None)
+        if book is None:
+            return False
+
+
+        today_str = datetime.now().strftime("%Y-%m-%d")
+
+        for session in book.reading_sessions:
+            if session['date'] == today_str:
+                session['pages'] += pages
                 break
 
-        if book:
-            book.add_pages(pages)
-            book.reading_sessions.append({
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "pages": pages
-            })
+        else:
+            book.reading_sessions.append({"date": today_str, "pages": pages})
 
-            self.reading_log.append({
-                "book":book_title,
-                "pages":pages,
-                "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            })
+        book.add_pages(pages)
+        if book.pages_read > book.total_pages:
+            book.pages_read = book.total_pages
+
+
+        self.reading_log.append({
+            "book": book_title,
+            "pages": pages,
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        })
+
+        return True
+
 
     def total_books(self):
         return len(self.books)
