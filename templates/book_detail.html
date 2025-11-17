@@ -1,49 +1,92 @@
 {% extends "base.html" %} {% block content %}
-<div class="container">
-  <h1>{{ book.title }} 📖</h1>
-  <p><strong>Author:</strong> {{ book.author }}</p>
-  <p><strong>Genre:</strong> {{ book.genre }}</p>
-  <p>
-    <strong>Pages:</strong> {{ book.pages_read }}/{{ book.total_pages }} ({{
-    book.progress_percentage() }}%)
-  </p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/book_detail.css') }}"
+    />
+    <title>Book Details</title>
+  </head>
+  <body>
+    <div class="container">
+      <a href="{{ url_for('library.library') }}" class="back-btn">
+        ← Back to Library
+      </a>
 
-  <hr />
+      <div class="book-header">
+        <div class="book-cover">
+          <img
+            src="{% if book.cover.startswith('http') %}
+          {{ book.cover }}
+        {% else %}
+          {{ url_for('static', filename='images/placeholder.png') }}
+        {% endif %}"
+            alt="{{ book.title }}"
+          />
+        </div>
 
-  <h2>Add a Note / Highlight</h2>
-  <form action="{{ url_for('book_detail', title=book.title) }}" method="POST">
-    <textarea
-      name="note"
-      rows="3"
-      placeholder="Write your note here..."
-      required
-    ></textarea>
-    <button type="submit">Add Note</button>
-  </form>
+        <div class="book-info">
+          <h1>{{book.title}}</h1>
+          <p class="author">by {{book.author}}</p>
 
-  <hr />
+          <div class="badges">
+            <span class="badge status">{{book.status.capitalize()}}</span>
+            <span class="badge secondary"
+              >{{ book.pages_read }} / {{ book.total_pages }} pages</span
+            >
+          </div>
 
-  <h2>Notes & Highlights</h2>
-  {% if book.notes %}
-  <ul>
-    {% for note in book.notes %}
-    <li>{{ note }}</li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>No notes yet. Add one above!</p>
-  {% endif %}
+          <div class="card">
+            <div class="card-header">
+              <h3>Reading Progress</h3>
+              <span class="progress-number">68%</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                style="width: {{ (book.pages_read / book.total_pages * 100) if book.total_pages else 0 }}%"
+              ></div>
+            </div>
+            <div class="progress-info">
+              <span
+                >Page {{ book.current_page }} of {{ book.total_pages }}</span
+              >
+              <span>{{ book.total_pages - book.pages_read }} pages left</span>
+            </div>
+          </div>
 
-  <hr />
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-value">{{ pages_today }}</div>
+              <p>Pages Today</p>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ days_reading }}</div>
+              <p>Days Reading</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <h2>Reading Progress Over Time</h2>
-  <canvas id="readingChart" width="400" height="200"></canvas>
-  <p>
-    <strong>Total pages read (all books):</strong> {{
-    analytics.total_pages_read() }}
-  </p>
-  <p>
-    <strong>Average pages/day:</strong> {{ analytics.average_pages_per_day() }}
-  </p>
-</div>
+      <div class="card sessions">
+        <h3>Reading Sessions</h3>
+
+        {% if sessions %} {% for session in sessions|reverse %}
+        <div class="session-row">
+          <span> {{ session.date }} </span>
+          <div>
+            <span>{{ session.pages }} pages</span>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <p>No reading sessions yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
+
 {% endblock %}

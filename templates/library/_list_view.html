@@ -1,0 +1,9 @@
+{% if books %}
+  <div id="listView" class="list-view active">
+    {% for book in books %}
+      {% include "library/_list_card.html" %}
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No books found. Add one above!</p>
+{% endif %}

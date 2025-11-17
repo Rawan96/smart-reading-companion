@@ -1,0 +1,56 @@
+<div class="grid-card" data-status="{{ book.status | lower }}">
+  <div class="grid-img-container">
+    <img src="{% if book.cover != ""%} {{ book.cover }} {% else %} {{
+    url_for('static', filename='images/placeholder.png') }} {% endif %}" alt="{{
+    book.title }}" />
+    <div class="hover-actions">
+      <a href="{{ url_for('book.book_detail', title=book.title) }}"
+        ><i class="fa-regular fa-eye"></i
+      ></a>
+      <a href="{{ url_for('book.edit_book', title=book.title) }}"
+        ><i class="fa-solid fa-pen"></i
+      ></a>
+      <a
+        href="{{ url_for('book.delete_book', title=book.title) }}"
+        class="delete"
+        ><i class="fa-regular fa-trash-can"></i
+      ></a>
+    </div>
+  </div>
+
+  <div class="grid-card-content">
+    <div class="grid-title-status">
+      <h3 class="grid-title">{{ book.title }}</h3>
+      <div
+        class="grid-status-detail {% if book.status.lower() == 'reading' %}grid-status-reading{% elif book.status.lower() == 'completed' %}grid-status-completed{% elif book.status.lower() == 'to-read' %}grid-status-to-read{% endif %}"
+      >
+        {% if book.status.lower() == 'reading' %}
+        <i class="fa-solid fa-book-open"></i>
+        {% elif book.status.lower() == 'completed' %}
+        <i class="fa-regular fa-circle-check"></i>
+        {% elif book.status.lower() == 'to-read' %}
+        <i class="fa-regular fa-clock"></i>
+        {% endif %}
+      </div>
+    </div>
+    <p class="grid-author">{{ book.author }}</p>
+
+    <div class="grid-progress-wrapper">
+      <div class="grid-progress-info">
+        <span class="pages"
+          >{{ book.pages_read }} / {{ book.total_pages }} pages</span
+        >
+        <span class="grid-progress-percent">
+          {{ (book.pages_read * 100 // book.total_pages) if book.total_pages
+          else 0 }}%
+        </span>
+      </div>
+      <div class="grid-progress-bar">
+        <div
+          class="progress-fill"
+          style="width: {{ (book.pages_read / book.total_pages * 100) if book.total_pages else 0 }}%"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

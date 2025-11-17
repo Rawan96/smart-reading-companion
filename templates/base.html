@@ -9,25 +9,104 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-    <script
-      src="{{ url_for('static', filename='js/script.js') }}"
-      defer
-    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      .user-dropdown {
+        position: absolute;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+      .user-dropdown a {
+        display: block;
+        color: black;
+        text-decoration: none;
+        padding: 8px;
+      }
+      .user-dropdown a:hover {
+        background-color: #f0f0f0;
+      }
+    </style>
   </head>
   <body>
-    <header>
-      <h2>📘 Smart Reading Companion</h2>
-      <nav>
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('library') }}">Add Book</a>
-      </nav>
-    </header>
+    <div class="app-container">
+      <header class="app-header">
+        <!-- Brand -->
+        <div class="brand">
+          <div class="icon-container">
+            <i class="fa-solid fa-book" style="color: white"></i>
+          </div>
+          <span class="brand-text">ReadCompanion</span>
+        </div>
 
-    <main>{% block content %}{% endblock %}</main>
+        <!-- Navigation -->
+        <nav class="top-navigation">
+          <a
+            href="{{ url_for('dashboard.dashboard') }}"
+            class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}"
+          >
+            Dashboard
+          </a>
 
-    <footer>
-      <p>2025 Smart Reading Companion</p>
-    </footer>
+          <a
+            href="{{ url_for('library.library') }}"
+            class="nav-item {% if request.endpoint == 'library' %}active{% endif %}"
+          >
+            Library
+          </a>
+
+          <a
+            href="{{ url_for('analytics.analytics') }}"
+            class="nav-item {% if request.endpoint == 'analytics' %}active{% endif %}"
+          >
+            Analytics
+          </a>
+
+          <a
+            href="{{ url_for('goals.goals') }}"
+            class="nav-item {% if request.endpoint == 'goals' %}active{% endif %}"
+          >
+            Goals
+          </a>
+        </nav>
+
+        <div class="user-icon-container">
+          <i
+            class="fa-regular fa-user user-icon"
+            onclick="toggleUserMenu()"
+          ></i>
+          <div id="user-dropdown" class="user-dropdown" style="display: none">
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+          </div>
+        </div>
+      </header>
+
+      {% block content %} {% endblock %}
+    </div>
+
+    <script>
+      function toggleUserMenu() {
+        const menu = document.getElementById("user-dropdown");
+        if (menu.style.display === "none" || menu.style.display === "") {
+          menu.style.display = "block";
+        } else {
+          menu.style.display = "none";
+        }
+      }
+
+      document.addEventListener("click", function (event) {
+        const menu = document.getElementById("user-dropdown");
+        const icon = document.querySelector(".user-icon");
+        if (!menu.contains(event.target) && !icon.contains(event.target)) {
+          menu.style.display = "none";
+        }
+      });
+    </script>
 
     {% if book %}
     <script id="session-data" type="application/json">

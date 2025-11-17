@@ -1,81 +1,35 @@
-from flask import Flask, render_template,request, redirect, url_for, flash
-from models.book import Book
-from models.reader import Reader
-from models.analytics import Analytics
+import os
+from flask import Flask,redirect, url_for,session
+
 
 app = Flask(__name__)
+app.secret_key = '_5#y2L"F4Q8z\n\xec]/'
+app.config["UPLOAD_FOLDER"] = os.path.join("static", "book_covers")
 
-reader = Reader('Rawan')
+
 
 @app.route('/')
-def dashboard():
-    return render_template('dashboard.html')
-
-@app.route('/library')
-def library():
-    return render_template("library.html", books = reader.books)
-
-@app.route('/add_book', methods=['POST'])
-def add_book():
-    title = request.form.get("title")
-    author = request.form.get("author")
-    total_pages = int(request.form.get('total_pages', 0))
-    genre = request.form.get("genre")
-
-    if title and author and total_pages > 0:
-        new_book = Book(title, author, total_pages, genre)
-        reader.add_book(new_book)
-    return redirect(url_for('library'))
+def home():
+    if "user" in session:
+        return redirect(url_for("dashboard.dashboard"))
+    return redirect(url_for("auth.sign_up"))
 
 
-@app.route('/update_progress/<string:title>', methods=['POST'])
-def update_progress(title):
-    pages = int(request.form.get('pages'))
-    if pages <= 0:
-        return redirect(url_for('library'))
+from routes.auth import auth_bp
+from routes.dashboard import dashboard_bp
+from routes.library import library_bp
+from routes.book import book_bp
+from routes.search import search_bp
+from routes.analytics import analytics_bp
+from routes.goals import goals_bp
 
-    book = next((b for b in reader.books if b.title == title),None)
-
-    if not book:
-        flash('Book not found.',"error")
-        return redirect(url_for('library'))
-    remaining_pages =book.total_pages - book.pages_read
-
-    if pages > remaining_pages:
-        flash(f"You only have {remaining_pages} pages left in '{book.title}'.", "error")
-        return redirect(url_for('library'))
-    reader.log_reading(title, pages)
-
-    if book.pages_read >= book.total_pages:
-        flash(f"Congratulations! You’ve completed '{book.title}'", "success")
-
-    return redirect(url_for('library'))
-
-
-@app.route('/delete-book/<string:title>')
-def delete_book(title):
-    reader.remove_book(title)
-    return redirect(url_for('library'))
-
-
-@app.route('/book/<string:title>', methods=['GET', 'POST'])
-def book_detail(title):
-    book = next((b for b in reader.books if b.title == title), None)
-    if not book:
-        return redirect(url_for('library'))
-
-    if request.method == 'POST':
-        note_text = request.form.get('note')
-        if note_text:
-            book.add_note(note_text)
-        return redirect(url_for('book_detail', title=title))
-
-    book_analytics = Analytics(reader)
-    return render_template(
-        'book_detail.html',
-        book=book,
-        analytics=book_analytics
-    )
+app.register_blueprint(auth_bp)
+app.register_blueprint(dashboard_bp,)
+app.register_blueprint(library_bp)
+app.register_blueprint(book_bp)
+app.register_blueprint(search_bp)
+app.register_blueprint(analytics_bp)
+app.register_blueprint(goals_bp)
 
 
 if __name__ == '__main__':

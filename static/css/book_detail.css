@@ -1,0 +1,176 @@
+.container {
+  margin-top: 3rem;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 60px;
+  padding: 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #c2410c;
+}
+
+.book-header {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 40px;
+  margin-top: 18px;
+}
+
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #eee;
+}
+.book-cover {
+  flex: 1;
+}
+
+.book-info {
+  flex: 2;
+}
+
+.book-info h1 {
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.author {
+  color: #777;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.badges {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.status {
+  background: #ffe8d5;
+  color: #c2410c;
+}
+
+.secondary {
+  background: #eee;
+}
+
+.card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #c2410c;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+}
+
+.stats {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.stat-card {
+  flex: 1;
+  background: #fff;
+  padding: 15px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
+}
+
+.stat-value {
+  font-size: 20px;
+  color: #c2410c;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.notes-box {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  resize: none;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.quote {
+  background: #fff5d6;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.quote-text {
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.quote-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+}
+
+.sessions .session-row {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}

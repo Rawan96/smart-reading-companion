@@ -1,60 +1,68 @@
+/* Base Styles */
+
 body {
   font-family: "Inter", sans-serif;
-  background: #f5f5f5;
-  color: #333;
+  background-color: #fcfbf9;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
   margin: 0;
-  padding: 20px;
 }
 
-.container {
-  max-width: 800px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+a {
+  text-decoration: none;
 }
 
-h1 {
-  text-align: center;
+.app-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  min-height: 100vh;
 }
 
-.add-book-form input {
-  padding: 8px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.add-book-form button {
-  background: #4caf50;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-text {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.top-navigation {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+}
+
+.nav-item {
+  cursor: pointer;
+  color: #555;
+}
+
+.nav-item.active {
+  color: #c2410c;
+}
+
+/* User icon */
+.user-icon-container:hover .user-icon {
+  color: #c2410c;
   cursor: pointer;
 }
 
-.add-book-form button:hover {
-  background: #45a049;
-}
-
-.library-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.library-table th,
-.library-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.library-table th {
-  background-color: #f2f2f2;
-}
+/* Flash Messages */
 
 .flash-messages {
   margin-bottom: 1em;
@@ -77,30 +85,531 @@ h1 {
   font-size: 14px;
 }
 
-/* Book details style  */
-textarea {
+/* Library Page Styles */
+.progress-bar {
   width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  overflow: hidden;
+  background: #e4e4e4;
+  height: 8px;
+  border-radius: 10px;
+  margin: 15px 0;
 }
 
-button {
-  background: #4caf50;
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.add-book-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #c2410c;
   color: white;
-  padding: 8px 12px;
   border: none;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.add-book-btn:hover {
+  background-color: #9a3412;
+}
+
+.add-book-btn .plus-icon {
+  color: white;
+}
+
+/* MODALS AND MODAL FORM FIELDS */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 20px 10px;
+}
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  max-width: 500px;
+  width: 100%;
+  padding: 25px;
+  padding-right: 50px;
+  border-radius: 12px;
+  position: relative;
+  font-size: 14px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
   cursor: pointer;
 }
 
-button:hover {
-  background: #45a049;
+p.description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 32px;
 }
 
-ul {
-  list-style-type: disc;
-  padding-left: 20px;
+.form-group {
+  margin-bottom: 8px;
 }
 
+.modal-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+#addBookModal input::placeholder,
+#addBookModal select::placeholder {
+  font-size: 14px;
+  color: #888;
+}
+
+#addBookModal select {
+  font-size: 14px;
+  line-height: 1.2;
+  padding: 6px 10px;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+input[type="file"] {
+  font-size: 14px;
+}
+
+input[type="text"] {
+  font-size: 14px;
+}
+
+.modal-field {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-submit {
+  background-color: #c2410c;
+  color: white;
+  flex: 2;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.btn-submit:hover {
+  background-color: #9a3412;
+}
+
+.btn-cancel {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+.btn-cancel:hover {
+  background-color: #f0f0f0;
+}
+
+/* NAVBAR AND HEADER */
+
+.icon-container {
+  width: 2.25rem;
+  height: 2.25rem;
+  background-color: #c2410c;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Library */
+
+.library-title h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.library-title p {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.library-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.view-mode {
+  display: flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.view-btn {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  color: black;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  margin: 0;
+  background-color: white;
+}
+
+.view-btn.active {
+  background: #e7e7e9;
+}
+
+.view-btn:hover {
+  background: #cdcdcd;
+}
+
+/* SEARCH BAR AND FILTERS BUTTONS */
+
+.search-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .search-filter {
+    flex-direction: row;
+  }
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  height: 40px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 25%;
+  font-size: 14px;
+  color: #999;
+  z-index: 2;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  padding-left: 40px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #c2410c;
+}
+
+.filter-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  color: black;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-btn:hover {
+  background: #f1f1f1;
+}
+
+.filter-btn.active {
+  background: #c2410c;
+  color: white;
+  border-color: #c2410c;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* LIST VIEW */
+
+.list-card {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.list-card .cover img {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.list-card .info-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.list-card .status-detail {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #f0f0f0;
+  padding: 5px 8px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.list-card .status-detail p {
+  margin: 0;
+}
+
+.status-reading {
+  background-color: #ffedd4 !important;
+}
+
+.status-completed {
+  background-color: #dcfce6 !important;
+}
+
+.status-to-read {
+  background-color: #f0f0f0 !important;
+}
+
+.list-card .details {
+  max-width: 70%;
+}
+
+.progress-fill {
+  background: #c2410c;
+  height: 100%;
+  border-radius: 10px;
+}
+
+/* GRID VIEW */
+
+.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.grid-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.grid-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.grid-img-container {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  background: #eee;
+  overflow: hidden;
+}
+
+.grid-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  color: black;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.actions a:hover {
+  background-color: #c2410c;
+  color: #fff;
+}
+
+.actions .delete {
+  color: #c2410c;
+}
+
+.hover-actions {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.hover-actions .delete {
+  color: red;
+}
+
+.grid-img-container:hover .hover-actions {
+  opacity: 1;
+}
+
+.hover-actions a {
+  background: white;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #1d2333;
+  cursor: pointer;
+  border: none;
+}
+
+.grid-card-content {
+  padding: 12px;
+}
+
+.grid-title-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.grid-title {
+  font-size: 1rem;
+  font-weight: bold;
+  overflow: hidden;
+  display: -webkit-box;
+}
+
+.grid-author {
+  color: #555;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.grid-progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.grid-progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #555;
+}
+.progress-info {
+  font-size: 14px;
+}
+
+.grid-progress-bar {
+  background: #e0e0e0;
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.grid-progress-fill {
+  background: #c2410c;
+  height: 100%;
+  border-radius: 6px;
+}
+
+.grid-status-detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 18px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+/* Colors based on status */
+.grid-status-reading {
+  background-color: #ffedd4;
+  color: #c2410c;
+}
+
+.grid-status-completed {
+  background-color: #dcfce6;
+  color: #16a34a;
+}
+
+.grid-status-to-read {
+  background-color: #f0f0f0;
+  color: #555;
+}

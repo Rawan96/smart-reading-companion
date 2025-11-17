@@ -1,0 +1,36 @@
+[
+    {
+        "name": "rawan",
+        "email": "rawan.dev6@gmail.com",
+        "password": "scrypt:32768:8:1$eMVAZdEvwoOrEi3B$e562f9818dfa1c0e7be42c0635e5ffca52df81b0059234808cc3c9344bb6df511caea291aff026efc0a7090abeadf2312e9ba0e6a073939982ff4003a27fc6ef",
+        "books": [
+            {
+                "title": "fda",
+                "author": "fsda",
+                "total_pages": 24,
+                "genre": "sfad",
+                "cover": "",
+                "pages_read": 0,
+                "status": "to-read",
+                "current_page": 0,
+                "notes": [],
+                "quotes": [],
+                "reading_sessions": []
+            },
+            {
+                "title": "tryre",
+                "author": "sdfa",
+                "total_pages": 3243,
+                "genre": "sgafd",
+                "cover": "",
+                "pages_read": 0,
+                "status": "to-read",
+                "current_page": 0,
+                "notes": [],
+                "quotes": [],
+                "reading_sessions": []
+            }
+        ],
+        "reading_log": []
+    }
+]
