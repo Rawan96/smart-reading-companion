@@ -20,7 +20,6 @@ from routes.dashboard import dashboard_bp
 from routes.library import library_bp
 from routes.book import book_bp
 from routes.search import search_bp
-from routes.analytics import analytics_bp
 from routes.goals import goals_bp
 
 app.register_blueprint(auth_bp)
@@ -28,7 +27,6 @@ app.register_blueprint(dashboard_bp,)
 app.register_blueprint(library_bp)
 app.register_blueprint(book_bp)
 app.register_blueprint(search_bp)
-app.register_blueprint(analytics_bp)
 app.register_blueprint(goals_bp)
 
 

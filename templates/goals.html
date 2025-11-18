@@ -1,0 +1,271 @@
+{% extends "base.html" %} {% block content %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/goals.css') }}"
+/>
+{% endblock %}
+
+<div class="container">
+  <div class="header">
+    <div class="goals-title">
+      <h1>Reading Goals</h1>
+      <p class="subtitle">Set and track your reading objectives</p>
+    </div>
+    <button class="btn primary" id="addGoalBtn">+ Add Goal</button>
+  </div>
+
+  <!-- Add Goal Form -->
+  <div class="card form-card" id="addGoalForm" style="display: none">
+    <h3>Create New Goal</h3>
+
+    <form method="POST" action="{{ url_for('goals.goals') }}" id="addGoalForm">
+      <div class="form-grid">
+        <div>
+          <label>Goal Title</label>
+          <input
+            type="text"
+            name="title"
+            placeholder="e.g., Read 10 books this quarter"
+            required
+            value="{{ add_data.title if add_data else '' }}"
+          />
+          {% if add_errors and add_errors.title %}
+          <p class="error-msg">{{ add_errors.title }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label>Goal Type</label>
+    <select name="goal_type" id="goal-type">
+      {% for option in ['Daily', 'Weekly', 'Monthly', 'Annual', 'Custom'] %}
+        <option value="{{ option }}" {% if add_data and add_data.goal_type == option %}selected{% endif %}>
+          {{ option }}
+        </option>
+      {% endfor %}
+    </select>
+        </div>
+
+        <div>
+          <label>Target Value</label>
+          <input type="number" name="target_value" placeholder="e.g., 10"       value="{{ add_data.target_value if add_data else '' }}" required
+          />
+          {% if add_errors and add_errors.target_value %}
+          <p class="error-msg">{{ add_errors.target_value }}</p>
+        {% endif %}
+        </div>
+
+        <div>
+          <label>Deadline</label>
+          <input type="date" name="deadline" id="deadline-input"       value="{{ add_data.deadline if add_data else '' }}"
+          />
+          {% if add_errors and add_errors.deadline %}
+          <p class="error-msg">{{ add_errors.deadline }}</p>
+        {% endif %}
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn primary" type="submit">Create Goal</button>
+        <button class="btn outline" id="cancelGoalBtn" type="button">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  {% set active_goals = goals | selectattr('completed', 'equalto', False) | list %}
+  {% if active_goals %}
+  <h2 class="active-goal">Active Goals</h2>
+
+    <div class="grid">
+  {% for goal in goals if not goal.completed %}
+    <div class="card {% if goal.completed %}completed-card{% endif %}">
+      <div class="action-header">
+        <div class="goal-subheader">
+          <div>
+            <i class="fa-solid fa-bullseye target-icon"></i>
+          </div>
+
+          <div>
+            <p class="title">{{ goal.title }}</p>
+            <span class="badge">{{ goal.goal_type|lower }}</span>
+            {% if goal.deadline %}<span class="muted"
+              >Due: {{ goal.deadline }}</span
+            >{% endif %}
+          </div>
+        </div>
+
+        <div class="actions">
+          <button
+            type="button"
+            class="icon-btn"
+            title="Edit Goal"
+            onclick='openEditForm("{{ goal.id }}", "{{ goal.title|escape }}", "{{ goal.goal_type|escape }}", {{ goal.target_value }}, "{{ goal.deadline }}", {{ goal.progress }})'>
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <form
+            method="POST"
+            action="{{ url_for('goals.delete_goal') }}"
+            style="display: inline-block"
+          >
+          <input type="hidden" name="goal_id" value="{{ goal.id }}" />
+
+            <button type="submit" class="icon-btn" title="Delete Goal">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="sub-container">
+        <div class="progress-header">
+          <span class="current-progress"
+            >{{ goal.progress }} / {{ goal.target_value }} {% if goal.goal_type
+            == "Daily" %}hours{% elif goal.goal_type == "Monthly" %}pages{% else
+            %}books{% endif %}
+          </span>
+          <span class="progress-percent">
+            {{ ((goal.progress / goal.target_value) * 100) | int }}%
+          </span>
+        </div>
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            style="width: {{ (goal.progress / goal.target_value * 100)|round(0) }}%"
+          ></div>
+        </div>
+        <p class="remaining-text">
+          {{ goal.target_value - goal.progress }} {% if goal.goal_type ==
+          "Daily" %}hours{% elif goal.goal_type == "Monthly" %}pages{% else
+          %}books{% endif %} remaining
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+
+  {% set completed_goals = goals | selectattr('completed', 'equalto', True) | list %}
+{% if completed_goals %}
+  <h2 class="completed-goal">Completed Goals</h2>
+  <div class="completed-card-parent">
+  {% for goal in goals if goal.completed %}
+    <div class="card completed-card">
+      <div class="completed-container">
+        <div class="icon-completed-goal-container">
+          <i class="fa-solid fa-check check"></i>
+        </div>
+        <div>
+          <h4>{{ goal.title.capitalize() }}</h4>
+
+          <p class="muted">
+            {{ goal.progress }} / {{ goal.target_value }} • Completed on {{
+            goal.completed_at }}
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<div id="editGoalModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit Goal</h3>
+      <span class="close-btn" onclick="closeModal()"
+        ><i class="fa-solid fa-xmark"></i
+      ></span>
+    </div>
+    <p class="modal-desc">Update your reading goal details below.</p>
+
+    <form id="editGoalForm" method="POST" action="{{ url_for('goals.edit_goal') }}">
+      <input type="hidden" name="goal_id" id="edit-goal-id" />
+
+            <div class="form-group">
+        <label for="edit-title">Goal Title *</label>
+        <input type="text" id="edit-title" name="title" value="{{ edit_data.title if edit_data else '' }}" required  />
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="edit-type">Goal Type</label>
+          <select id="edit-type" name="goal_type">
+            {% for option in ['Daily','Weekly','Monthly','Annual','Custom'] %}
+              <option value="{{ option }}" {% if edit_data and edit_data.goal_type == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+          </select>
+
+
+        </div>
+
+        <div class="form-group">
+          <label for="edit-deadline">Deadline</label>
+          <input type="date" id="edit-deadline" name="deadline"   value="{{ edit_data.deadline if edit_data else '' }}"/>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="edit-current">Current Progress</label>
+          <input type="number" id="edit-current" name="current" min="0"  value="{{ edit_data.current if edit_data else '' }}" />
+
+          {% if edit_errors and edit_errors.current%}
+          <p class="error-msg">{{ edit_errors.current }}</p>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="edit-target">Target Value *</label>
+          <input
+            type="number"
+            id="edit-target"
+            name="target"
+            min="1"
+
+            value="{{ edit_data.target if edit_data else '' }}"
+          />
+          {% if edit_errors and edit_errors.target %}
+          <p class="error-msg">{{ edit_errors.target }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn primary save">Save Changes</button>
+        <button type="button" class="btn outline cancel" onclick="closeModal()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/goals.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      // Open Add Goal form if there are errors
+      const addErrors = {{ add_errors | tojson | safe if add_errors else 'null' }};
+      if (addErrors) {
+          document.getElementById("addGoalForm").style.display = "block";
+      }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const editErrors = {{ edit_errors | tojson | safe if edit_errors else 'null' }};
+    if (editErrors) {
+        const editData = {{ edit_data | tojson | safe if edit_data else 'null' }};
+        if (editData) {
+            openEditForm(
+                editData.goal_index,
+                editData.title,
+                editData.goal_type,
+                editData.target,
+                editData.deadline,
+                editData.current || 0
+            );
+        }
+    }
+});
+  </script>
+{% endblock %}
