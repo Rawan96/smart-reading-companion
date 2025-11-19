@@ -1,9 +1,34 @@
 const modal = document.getElementById("addBookModal");
 const btn = document.getElementById("addBookBtn");
+
 btn.onclick = () => modal.style.display = "block";
 
-function closeModal() { modal.style.display = "none"; }
-window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
+function closeModal() {
+  const modal = document.getElementById("addBookModal");
+  modal.style.display = "none";
+
+  if (window.location.pathname.startsWith("/edit_book/")) {
+    window.location.href = "/library";
+  }
+}
+
+document.querySelectorAll(".close-modal").forEach(el => {
+  el.addEventListener("click", closeModal);
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === modal) closeModal();
+});
+
+if (window.editBook === true && modal) {
+  modal.style.display = "block";
+
+  if (window.history.replaceState) {
+    const editUrl = `${window.location.origin}${window.location.pathname}?edit=true`;
+    window.history.replaceState({}, document.title, editUrl);
+  }
+}
+
 
 function useLink() {
   document.getElementById("uploadSection").style.display = "none";
@@ -14,6 +39,7 @@ function useUpload() {
   document.getElementById("uploadSection").style.display = "block";
   document.getElementById("urlSection").style.display = "none";
 }
+
 // Show current page field only if reading
 const statusSelect = document.getElementById("status");
 const currentPageGroup = document.getElementById("currentPageGroup");
@@ -61,108 +87,24 @@ const searchInput = document.getElementById("searchInput");
 
 searchInput.addEventListener("input", function () {
   const query = this.value;
-  fetch(`/api/search?q=${encodeURIComponent(query)}`)
-    .then(res => res.json())
-    .then(data => renderBooks(data.books));
+  const currentView = listView.classList.contains("hidden") ? "grid" : "list";
+
+  fetch(`/search?q=${encodeURIComponent(query)}&view=${currentView}`)
+    .then(res => res.text())
+    .then(html => {
+      if (currentView === "list") {
+        listView.innerHTML = html;
+      } else {
+        gridView.innerHTML = html;
+      }
+    });
 });
 
-function renderBooks(books) {
-  listView.innerHTML = "";
-  gridView.innerHTML = "";
-  if (!books || books.length === 0) {
-    listView.innerHTML = "<p>No books found.</p>";
-    gridView.innerHTML = "<p>No books found.</p>";
-    return;
-  }
-  books.forEach(book => {
-    const percent = book.total_pages ? (book.pages_read / book.total_pages * 100).toFixed(1) : 0;
-    const listCard = document.createElement("div");
-    listCard.className = "list-card";
-    // TODO: Edit the image here
-    listCard.innerHTML = `'
-      <div class="cover">
-      <img src="${book.cover !== '' ? book.cover : 'static/images/placeholder.png'
-      }"
-      alt = "${book.title}" />
-    </div >
-
-    <div class="info-wrapper">
-      <div class="status-detail ${book.status === 'reading' ? 'status-reading'
-        : book.status === 'completed' ? 'status-completed' : 'status-to-read'}">
-        ${book.status === 'reading' ? '<i class="fa-solid fa-book-open"></i>' :
-        book.status === 'completed' ? '<i class="fa-regular fa-circle-check"></i>' :
-          '<i class="fa-regular fa-clock"></i>'}
-        <p>${book.status.replace('-', ' ')}</p>
-      </div>
-
-      <div class="details">
-        <h3>${book.title}</h3>
-        <p>${book.author}</p>
-
-        <div class="progress-info">
-          <span>${book.pages_read} / ${book.total_pages} pages</span>
-          <span class="progress-percent">${percent}%</span>
-        </div>
-
-        <div class="progress-bar">
-          <div class="progress-fill" style="width:${percent}%"></div>
-        </div>
-
-        <div class="actions">
-          <a href="/book/${book.title}"><i class="fa-regular fa-eye"></i>View</a>
-          <a href="/edit_book/${encodeURIComponent(book.title)}">Edit</a>
-          <a href="/delete-book/${encodeURIComponent(book.title)}" class="delete"><i class="fa-regular fa-trash-can"></i>Delete</a>
-        </div>
-      </div>
-    </div>
-  `;
-
-    listView.appendChild(listCard);
-
-    const gridCard = document.createElement("div");
-    gridCard.className = "grid-card";
-    gridCard.dataset.status = book.status.toLowerCase();
-    gridCard.innerHTML = `
-    < div class= "grid-img-container" >
-    <img src="${book.cover || '/static/images/placeholder.png'}"
-         alt="${book.title}"
-         />
-    <div class="hover-actions">
-      <a href="/book/${book.title}"><i class="fa-regular fa-eye"></i></a>
-      <a href="/edit_book/${encodeURIComponent(book.title)}"><i class="fa-solid fa-pen"></i></a>
-      <a href="/delete-book/${encodeURIComponent(book.title)}" class="delete"><i class="fa-regular fa-trash-can"></i></a>
-    </div>
-  </ >
-    <div class="grid-card-content">
-      <div class="grid-title-status">
-        <h3 class="grid-title">${book.title}</h3>
-        <div class="grid-status-detail ${book.status === 'reading' ? 'grid-status-reading' : book.status === 'completed' ? 'grid-status-completed' : 'grid-status-to-read'}">
-          ${book.status === 'reading' ? '<i class="fa-solid fa-book-open"></i>' :
-        book.status === 'completed' ? '<i class="fa-regular fa-circle-check"></i>' :
-          '<i class="fa-regular fa-clock"></i>'}
-        </div>
-      </div>
-      <p class="grid-author">${book.author}</p>
-      <div class="grid-progress-wrapper">
-        <div class="grid-progress-info">
-          <span class="pages">${book.pages_read} / ${book.total_pages} pages</span>
-          <span class="grid-progress-percent">${percent}%</span>
-        </div>
-        <div class="grid-progress-bar">
-          <div class="progress-fill" style="width:${percent}%"></div>
-        </div>
-      </div>
-    </div>`;
-    gridView.appendChild(gridCard);
-  });
-}
-
-// Open modal when editing (server rendered)
+// Open modal when editing
 if (window.hasOwnProperty('edit_book') || document.querySelectorAll("[data-edit-book]").length) {
   if (modal) modal.style.display = "block";
 }
 
-// Filter buttons
 const filterButtons = document.querySelectorAll(".filter-btn");
 
 // Function to apply the filter
@@ -178,7 +120,6 @@ function applyFilter(filter) {
     card.style.display = filter === "all" || card.dataset.status === filter ? "block" : "none";
   });
 
-  // Save selected filter in localStorage
   localStorage.setItem("selectedFilter", filter);
 }
 
@@ -190,7 +131,6 @@ filterButtons.forEach(btn => {
 });
 applyFilter(savedFilter);
 
-// Add click event
 filterButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     filterButtons.forEach(b => b.classList.remove("active"));
@@ -202,14 +142,12 @@ filterButtons.forEach(btn => {
 });
 
 
-//For flash message
 setTimeout(() => {
   const flashBox = document.querySelector(".flash-messages");
   if (flashBox) {
     flashBox.style.transition = "opacity 0.5s";
     flashBox.style.opacity = "0";
 
-    // Remove from DOM after fade-out
     setTimeout(() => flashBox.remove(), 500);
   }
 }, 3000);
