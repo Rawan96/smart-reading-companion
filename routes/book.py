@@ -25,6 +25,14 @@ def add_book():
         flash(f"Book '{title}' already exists!", "error")
         return redirect(url_for("library.library"))
 
+    if total_pages <= 0:
+        flash("Total pages must be greater than 0.", "error")
+        return redirect(url_for("library.library"))
+
+    if current_page < 0 or current_page > total_pages:
+        flash("Current page must be between 0 and total pages.", "error")
+        return redirect(url_for("library.library"))
+
     new_book = Book(title=title, author=author, total_pages=total_pages, cover=cover_url, status=status)
 
     if status == "reading":
@@ -84,6 +92,14 @@ def edit_book(title):
                 book.pages_read = max(book.pages_read, new_current_page)
 
             book.current_page = new_current_page
+
+        if total_pages <= 0:
+            flash("Total pages must be greater than 0.", "error")
+            return redirect(url_for("book.edit_book", title=title))
+
+        if new_current_page < 0 or new_current_page > total_pages:
+            flash("Current page must be between 0 and total pages.", "error")
+            return redirect(url_for("book.edit_book", title=title))
 
         book.status = new_status
         book.title = request.form["title"]

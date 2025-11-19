@@ -1,16 +1,35 @@
 <div class="form-group">
     <label class="modal-label" for="title">Book Title</label>
-    <input class="modal-field"  type="text" id="title" name="title" placeholder="e.g., The Midnight Library" required value="{{ edit_book.title if edit_book else '' }}">
+    <input
+    class="modal-field"  t
+    ype="text"
+    id="title"
+    name="title"
+    placeholder="e.g., The Midnight Library"
+    value="{{ edit_book.title if edit_book else '' }}"
+    required
+    >
   </div>
 
   <div class="form-group">
     <label class="modal-label" for="author">Author</label>
-    <input class="modal-field" type="text" id="author" name="author" placeholder="e.g., Matt Haig" required value="{{ edit_book.author if edit_book else '' }}">
+    <input class="modal-field" type="text" id="author" name="author" placeholder="e.g., Matt Haig"  value="{{ edit_book.author if edit_book else '' }}"
+    required
+    >
   </div>
 
   <div class="form-group">
-    <label class="modal-label" for="pages">Total Pages *</label>
-    <input class="modal-field" type="number" name="total_pages" id="pages" placeholder="e.g., 304" required value="{{ edit_book.total_pages if edit_book else '' }}">
+    <label class="modal-label" for="pages">Total Pages</label>
+    <input
+    class="modal-field"
+    type="number"
+    name="total_pages"
+    min="1"
+    id="pages"
+    placeholder="e.g., 304"
+    value="{{ edit_book.total_pages if edit_book else '' }}"  min="1"
+    required
+    >
   </div>
 
   <div class="form-group">
@@ -28,12 +47,12 @@
     class="modal-field"
     type="number"
     name="current_page"
-    min="1"
+    min="0"
     {% if edit_book is defined %}
     max="{{ edit_book.total_pages }}"
     value="{{ edit_book.current_page }}"
   {% else %}
-    value=""
+    value="0"
   {% endif %}
     required
     >
