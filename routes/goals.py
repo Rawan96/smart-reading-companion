@@ -2,10 +2,13 @@ import calendar
 from datetime import date, timedelta
 from flask import Blueprint, render_template,session,request,flash,redirect,url_for
 from utils.helpers import load_reader
+from utils.decorators import login_required
+
 
 goals_bp = Blueprint('goals', __name__)
 
 @goals_bp.route("/goals", methods=["GET", "POST"])
+@login_required
 def goals():
 
     reader = load_reader()

@@ -1,9 +1,12 @@
 from flask import Blueprint, render_template, request
+from utils.decorators import login_required
 from utils.helpers import load_reader
+
 
 library_bp = Blueprint('library', __name__)
 
 @library_bp.route('/library')
+@login_required
 def library():
     reader = load_reader()
     search_query = request.args.get('q', '').lower()

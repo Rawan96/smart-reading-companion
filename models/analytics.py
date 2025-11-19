@@ -1,5 +1,5 @@
 from collections import  defaultdict
-import datetime
+from datetime import datetime
 
 class Analytics:
     def __init__(self, reader):
