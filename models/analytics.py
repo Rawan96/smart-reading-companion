@@ -1,28 +1,41 @@
-from collections import Counter
+from collections import  defaultdict
+import datetime
 
 class Analytics:
     def __init__(self, reader):
         self.reader = reader
 
+    def total_books(self):
+        return len(self.reader.books)
 
     def total_pages_read(self):
-        return sum(book.pages_read for book in self.reader.books)
-
-    def average_pages_per_day(self):
-        log = self.reader.reading_log
-        if not log:
-            return 0
-        dates = [entry['date'].split(' ')[0] for entry in log]
-        total_pages = sum(entry['pages'] for entry in log)
-        return round(total_pages / len(dates), 2)
-
-    def genre_distribution(self):
-        return dict(Counter(b.genre for b in self.reader.books))
+        return sum(b.pages_read for b in self.reader.books)
 
     def completion_rate(self):
         books = self.reader.books
-        if not books:
+        total = len(books)
+        if total == 0:
+            return 0
+        completed = sum(1 for b in books if b.pages_read >= b.total_pages)
+        return round((completed / total) * 100)
+
+    def average_books_monthly(self):
+
+        completed_books = []
+        for b in self.reader.books:
+            if b.pages_read >= b.total_pages:
+                last_session_date = b.reading_sessions[-1]["date"]
+                last_session_date = datetime.strptime(last_session_date, "%Y-%m-%d")
+                completed_books.append(last_session_date)
+
+        if not completed_books:
             return 0
 
-        completed = sum(b.pages_read == b.total_pages for b in books)
-        return round((completed / len(books)) * 100, 2)
+        months = defaultdict(int)
+        for d in completed_books:
+            month_key = d.strftime("%Y-%m")
+            months[month_key] += 1
+
+        total_months = len(months)
+        total_books = sum(months.values())
+        return round(total_books / total_months)

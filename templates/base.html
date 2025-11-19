@@ -38,10 +38,21 @@
       <header class="app-header">
         <!-- Brand -->
         <div class="brand">
-          <div class="icon-container">
-            <i class="fa-solid fa-book" style="color: white"></i>
-          </div>
-          <span class="brand-text">ReadCompanion</span>
+          <a
+            href="{{ url_for('dashboard.dashboard') }}"
+            style="
+              display: flex;
+              align-items: center;
+              text-decoration: none;
+              color: inherit;
+              gap: 10px;
+            "
+          >
+            <div class="icon-container">
+              <i class="fa-solid fa-book" style="color: white"></i>
+            </div>
+            <span class="brand-text">ReadCompanion</span>
+          </a>
         </div>
 
         <!-- Navigation -->

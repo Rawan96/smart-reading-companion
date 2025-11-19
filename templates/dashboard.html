@@ -1,4 +1,97 @@
-{% extends "base.html" %} {% block content %}
-<h1>Dashboard</h1>
-<p>Welcome back, here’s your reading progress 📚</p>
+{% extends "base.html" %} {% block content %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard.css') }}"
+/>
+{% endblock %}
+
+<div class="dashboard-header">
+  <h1>Welcome back, {{name}}!</h1>
+
+  <p>Track your reading journey and achieve your goals</p>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <i class="fa-solid fa-arrow-trend-up"></i>
+    <div class="stat-value">{{ stats.total_books }}</div>
+    <div class="stat-label">Total Books</div>
+  </div>
+  <div class="card">
+    <i class="fa-solid fa-arrow-trend-up"></i>
+    <div class="stat-value">{{ stats.average_books_monthly }}</div>
+    <div class="stat-label">Average Books/Month</div>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-book-open"></i>
+    <div class="stat-value" style="color: #b45309">
+      {{ stats.total_pages_read }}
+    </div>
+    <div class="stat-label">Total Pages Read</div>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-bullseye"></i>
+    <div class="stat-value" style="color: #b91c1c">
+      {{ stats.completion_rate }}%
+    </div>
+    <div class="stat-label">Goal Completion Rate</div>
+  </div>
+</div>
+
+<div class="charts-row">
+  <div class="card">
+    <h3 style="margin-bottom: 16px; color: #111">Monthly Reading Progress</h3>
+    <canvas id="booksChart"></canvas>
+  </div>
+  <div class="card">
+    <h3 style="margin-bottom: 16px; color: #111">Pages Read Over Time</h3>
+    <canvas id="pagesChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const booksLabels = {{ stats.books_labels | tojson | safe }};
+  const booksData = {{ stats.books_data | tojson | safe }};
+  const pagesLabels = {{ stats.pages_labels | tojson | safe }};
+  const pagesData = {{ stats.pages_data | tojson | safe }};
+
+
+  const booksCtx = document.getElementById("booksChart");
+    new Chart(booksCtx, {
+      type: "bar",
+      data: {
+        labels: booksLabels,
+        datasets: [
+          {
+            label: "Books Read",
+            data: booksData,
+            backgroundColor: "#c2410c",
+          },
+        ],
+      },
+    });
+
+    const pagesCtx = document.getElementById("pagesChart");
+    new Chart(pagesCtx, {
+      type: "line",
+      data: {
+        labels: pagesLabels,
+        datasets: [
+          {
+            label: "Pages",
+            data: pagesData,
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16,185,129,0.3)",
+            tension: 0.3,
+          },
+        ],
+      },
+    });
+  });
+</script>
 {% endblock %}
