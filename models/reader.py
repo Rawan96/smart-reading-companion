@@ -70,7 +70,7 @@ class Reader:
         else:
             users.append({
                 "name": self.name,
-                "email": self.email,
+                "email": self.email.lower(),
                 "password": self.password_hash,
                 "books": [b.to_dict() for b in self.books],
                 "reading_log": self.reading_log,
