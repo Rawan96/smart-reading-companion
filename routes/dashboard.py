@@ -10,10 +10,13 @@ dashboard_bp = Blueprint('dashboard', __name__)
 @login_required
 def dashboard():
     email = session.get("user")
-    name = session.get("name")
     reader = load_reader()
     analytics = Analytics(reader)
 
+    if not reader:
+        flash("User not found.", "error")
+        session.pop("user", None)
+        return redirect(url_for("auth.sign_in"))
 
     if not email:
         flash("Please log in first.", "error")

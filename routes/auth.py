@@ -8,14 +8,22 @@ def sign_up():
 
     if session.get("user"):
         return redirect(url_for('dashboard.dashboard'))
-    
+
+    name = ""
+    email = ""
+    error_email = None
+
+
     if request.method == "POST":
-        name = request.form["name"]
-        email = request.form["email"].lower()
-        password = request.form["password"]
+        name = request.form.get("name", "")
+        email = request.form.get("email", "").lower()
+        password = request.form.get("password", "")
+
 
         if Reader.find_by_email(email):
-            return redirect(url_for("auth.sign_up"))
+            error_email = "This email is already registered."
+            return render_template("auth/sign_up.html", error_email=error_email, name=name, email=email)
+
 
         reader = Reader.create_user(name, email, password)
         if reader:
@@ -24,7 +32,7 @@ def sign_up():
             return redirect(url_for("dashboard.dashboard"))
 
 
-    return render_template("auth/sign_up.html")
+    return render_template("auth/sign_up.html", error_email=error_email, name=name, email=email)
 
 
 @auth_bp.route("/sign-in", methods=["GET", "POST"])

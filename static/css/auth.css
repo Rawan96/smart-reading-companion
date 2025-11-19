@@ -181,3 +181,9 @@ form button:hover {
 .text-center button:hover {
   color: #9a2e04;
 }
+
+#input-error {
+  color: #c2410c;
+  font-size: 14px;
+  margin-top: 5px;
+}

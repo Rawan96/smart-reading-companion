@@ -71,6 +71,7 @@
                 id="name"
                 name="name"
                 placeholder="John Doe"
+                value="{{ name if name is defined else '' }}"
                 required
               />
             </div>
@@ -83,7 +84,11 @@
                 name="email"
                 placeholder="you@example.com"
                 required
+                value="{{ email if email is defined else '' }}"
               />
+              {% if error_email %}
+              <p id="input-error">{{ error_email }}</p>
+              {% endif %}
             </div>
 
             <div class="form-group">
