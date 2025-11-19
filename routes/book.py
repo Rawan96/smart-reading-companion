@@ -72,11 +72,18 @@ def edit_book(title):
             book.reading_sessions = []
 
         elif new_status == "reading":
-            pages_to_add = new_current_page - book.pages_read
-            if pages_to_add > 0:
-                book.reading_sessions.append({"pages": pages_to_add, "date": str(date.today())})
+            if book.status == "completed":
+                book.pages_read = new_current_page
+                book.reading_sessions = []
+                if new_current_page > 0:
+                    book.reading_sessions.append({"pages": new_current_page, "date": str(date.today())})
+            else:
+                pages_to_add = new_current_page - book.pages_read
+                if pages_to_add > 0:
+                    book.reading_sessions.append({"pages": pages_to_add, "date": str(date.today())})
+                book.pages_read = max(book.pages_read, new_current_page)
+
             book.current_page = new_current_page
-            book.pages_read = max(book.pages_read, new_current_page)
 
         book.status = new_status
         book.title = request.form["title"]

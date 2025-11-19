@@ -59,21 +59,21 @@
         <nav class="top-navigation">
           <a
             href="{{ url_for('dashboard.dashboard') }}"
-            class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}"
+            class="nav-item {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"
           >
             Dashboard
           </a>
 
           <a
             href="{{ url_for('library.library') }}"
-            class="nav-item {% if request.endpoint == 'library' %}active{% endif %}"
+            class="nav-item {% if request.endpoint == 'library.library' %}active{% endif %}"
           >
             Library
           </a>
 
           <a
             href="{{ url_for('goals.goals') }}"
-            class="nav-item {% if request.endpoint == 'goals' %}active{% endif %}"
+            class="nav-item {% if request.endpoint == 'goals.goals' %}active{% endif %}"
           >
             Goals
           </a>

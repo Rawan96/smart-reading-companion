@@ -53,7 +53,7 @@ a {
 }
 
 .nav-item.active {
-  color: #c2410c;
+  color: #c2410c !important;
 }
 
 /* User icon */
