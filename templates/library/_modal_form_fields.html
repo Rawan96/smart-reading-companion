@@ -39,24 +39,13 @@
     >
   </div>
 
-  <div class="form-group">
-    <label class="modal-label" for="genre">Genre</label>
-    <input class="modal-field" type="text" id="genre" name="genre" placeholder="e.g., Fantasy, Mystery, Sci-Fi" required value="{{ edit_book.genre if edit_book else '' }}">
-  </div>
 
   <div class="form-group">
-    <label class="modal-label">Book Cover</label>
-
-    <div id="uploadSection">
-      <input class="modal-field"  type="file" name="cover" accept="image/*">
-      <p class="link-option" onclick="useLink()">Use URL instead</p>
-    </div>
-
-    <div id="urlSection" style="display: none">
-      <input type="url" name="cover_url" placeholder="https://example.com/image.jpg">
-      <p class="link-option" onclick="useUpload()">Upload image instead</p>
-    </div>
+    <label class="modal-label" for="cover_url">Book Cover URL</label>
+    <input class="modal-field" type="url" id="cover_url" name="cover_url" placeholder="https://example.com/image.jpg"  value="{{ edit_book.cover if edit_book else '' }}">
   </div>
+
+
 
   <div class="modal-buttons">
     <button type="submit" class="fbtn btn-submit">{{ edit_book and "Save Changes" or "Add Book" }}</button>

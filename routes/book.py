@@ -17,22 +17,15 @@ def add_book():
     title = request.form.get("title")
     author = request.form.get("author")
     total_pages = int(request.form.get("total_pages") or 0)
-    genre = request.form.get("genre")
     status = request.form.get("status", "to-read")
     current_page = int(request.form.get("current_page") or 0)
-    cover_url = request.form.get("cover_url")
-
-    if cover_url and cover_url.strip():
-        cover = cover_url.strip()
-    else:
-        cover = ""
-
+    cover_url = request.form.get("cover_url", "").strip()
 
     if any(b.title == title for b in reader.books):
         flash(f"Book '{title}' already exists!", "error")
         return redirect(url_for("library.library"))
 
-    new_book = Book(title=title, author=author, total_pages=total_pages, genre=genre, cover=cover, status=status)
+    new_book = Book(title=title, author=author, total_pages=total_pages, cover=cover_url, status=status)
 
     if status == "reading":
         new_book.set_current_page(current_page, reader)
@@ -88,7 +81,6 @@ def edit_book(title):
         book.status = new_status
         book.title = request.form["title"]
         book.author = request.form["author"]
-        book.genre = request.form["genre"]
         book.total_pages = total_pages
 
         reader.save_reader()

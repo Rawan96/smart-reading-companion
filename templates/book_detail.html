@@ -19,7 +19,7 @@
       <div class="book-header">
         <div class="book-cover">
           <img
-            src="{% if book.cover.startswith('http') %}
+            src="{% if book.cover %}
           {{ book.cover }}
         {% else %}
           {{ url_for('static', filename='images/placeholder.png') }}

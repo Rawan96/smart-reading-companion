@@ -1,11 +1,10 @@
 from datetime import date, datetime
 
 class Book:
-    def __init__(self, title, author, total_pages, genre, pages_read=0, notes=None, quotes=None, reading_sessions=None, cover=None, status="to-read",current_page=0):
+    def __init__(self, title, author, total_pages, pages_read=0, notes=None, quotes=None, reading_sessions=None, cover=None, status="to-read",current_page=0):
         self.title = title
         self.author = author
         self.total_pages = total_pages
-        self.genre = genre
         self.pages_read = pages_read
         self.status = status
         self.current_page = current_page
@@ -78,7 +77,6 @@ class Book:
             "title": self.title,
             "author": self.author,
             "total_pages": self.total_pages,
-            "genre": self.genre,
             "cover": self.cover,
             "pages_read": self.pages_read,
             "status": self.status,
@@ -95,7 +93,6 @@ class Book:
             title=data["title"],
             author=data["author"],
             total_pages=data["total_pages"],
-            genre=data["genre"],
             cover = data.get("cover"),
             pages_read=data.get("pages_read", 0),
             status=data.get("status", "to-read"),
