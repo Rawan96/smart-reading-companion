@@ -1,0 +1,34 @@
+<header class="app-header">
+  <div class="brand">
+    <a href="{{ url_for('dashboard.dashboard') }}" class="brand-link">
+      <div class="icon-container">
+        <i class="fa-solid fa-book"></i>
+      </div>
+      <span class="brand-text">ReadCompanion</span>
+    </a>
+  </div>
+
+  <nav class="top-navigation">
+    <a
+      href="{{ url_for('dashboard.dashboard') }}"
+      class="nav-item {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"
+      >Dashboard</a
+    >
+    <a
+      href="{{ url_for('library.library') }}"
+      class="nav-item {% if request.endpoint == 'library.library' %}active{% endif %}"
+      >Library</a
+    >
+    <a
+      href="{{ url_for('goals.goals') }}"
+      class="nav-item {% if request.endpoint == 'goals.goals' %}active{% endif %}"
+      >Goals</a
+    >
+  </nav>
+
+  <div class="user-icon-container">
+    <a href="{{ url_for('auth.logout') }}">
+      <i class="fa-regular fa-user user-icon"></i>
+    </a>
+  </div>
+</header>

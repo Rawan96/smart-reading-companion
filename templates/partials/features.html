@@ -1,0 +1,9 @@
+{% for feature in features %}
+<div class="feature">
+  <div class="feature-icon"><i class="{{ feature.icon }}"></i></div>
+  <div class="feature-text">
+    <p>{{ feature.title }}</p>
+    <p>{{ feature.description }}</p>
+  </div>
+</div>
+{% endfor %}

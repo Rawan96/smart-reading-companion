@@ -8,7 +8,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/auth.css') }}"
@@ -19,9 +18,7 @@
       <div class="left">
         <div>
           <div class="brand">
-            <div class="brand-icon">
-              <i class="fas fa-bookmark"></i>
-            </div>
+            <div class="brand-icon"><i class="fas fa-book"></i></div>
             <span>ReadCompanion</span>
           </div>
           <h2>Start your reading adventure</h2>
@@ -32,25 +29,11 @@
         </div>
 
         <div>
-          <div class="feature">
-            <div class="feature-icon">
-              <i class="fas fa-bullseye"></i>
-            </div>
-            <div class="feature-text">
-              <p>Set Reading Goals</p>
-              <p>Create and track goals that motivate you to read more</p>
-            </div>
-          </div>
-
-          <div class="feature">
-            <div class="feature-icon">
-              <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="feature-text">
-              <p>Track Your Progress</p>
-              <p>See your reading patterns and celebrate milestones</p>
-            </div>
-          </div>
+          {% set features = [ {'icon': 'fas fa-bullseye', 'title': 'Set Reading
+          Goals', 'description': 'Create and track goals that motivate you'},
+          {'icon': 'fas fa-chart-line', 'title': 'Track Your Progress',
+          'description': 'See patterns and celebrate milestones'} ] %} {%
+          include 'partials/features.html' %}
         </div>
       </div>
 

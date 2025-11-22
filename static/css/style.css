@@ -41,6 +41,18 @@ a {
   color: #111827;
 }
 
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  gap: 10px;
+}
+
+.icon-container i {
+  color: white;
+}
+
 .top-navigation {
   display: flex;
   gap: 1rem;

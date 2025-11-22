@@ -18,9 +18,7 @@
       <div class="left">
         <div>
           <div class="brand">
-            <div class="brand-icon">
-              <i class="fas fa-bookmark"></i>
-            </div>
+            <div class="brand-icon"><i class="fas fa-book"></i></div>
             <span>ReadCompanion</span>
           </div>
           <h2>Your personal reading sanctuary</h2>
@@ -31,15 +29,9 @@
         </div>
 
         <div>
-          <div class="feature">
-            <div class="feature-icon">
-              <i class="fas fa-book"></i>
-            </div>
-            <div class="feature-text">
-              <p>Build Your Library</p>
-              <p>Organize and track all your books in one beautiful place</p>
-            </div>
-          </div>
+          {% set features = [ {'icon': 'fas fa-book', 'title': 'Build Your
+          Library', 'description': 'Organize and track all your books in one
+          beautiful place'} ] %} {% include 'partials/features.html' %}
         </div>
       </div>
 
@@ -81,7 +73,7 @@
           <div class="text-center">
             <p>
               New to ReadCompanion?
-              <a href="{{ url_for('auth.sign_up') }}"> Create an account </a>
+              <a href="{{ url_for('auth.sign_up') }}">Create an account</a>
             </p>
           </div>
         </div>
