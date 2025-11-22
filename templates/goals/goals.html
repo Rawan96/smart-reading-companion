@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block content %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/goals.css') }}"
+/>
+{% endblock %}
+<div class="container">
+  <div class="header">
+    <div class="goals-title">
+      <h1>Reading Goals</h1>
+      <p class="subtitle">Set and track your reading objectives</p>
+    </div>
+
+    <button class="btn primary" id="addGoalBtn">+ Add Goal</button>
+  </div>
+
+  {% include "goals/_add_goal_form.html" %} {% set active_goals = goals |
+  selectattr('completed', 'equalto', False) | list %} {% if active_goals %}
+  <h2 class="active-goal">Active Goals</h2>
+  <div class="grid">
+    {% for goal in active_goals %} {% include "goals/_goal_card.html" %} {%
+    endfor %}
+  </div>
+  {% endif %} {% set completed_goals = goals | selectattr('completed',
+  'equalto', True) | list %} {% if completed_goals %}
+  <h2 class="completed-goal">Completed Goals</h2>
+  <div class="completed-card-parent">
+    {% for goal in completed_goals %} {% include
+    "goals/_goal_card_completed.html" %} {% endfor %}
+  </div>
+  {% endif %} {% include "goals/_edit_goal_modal.html" %}
+</div>
+
+<script>
+  window.goalsData = {{ goals_data | tojson | safe }};
+  window.addErrors = {{ add_errors | default({}, true) | tojson }};
+  window.hasEditErrors = {{ (edit_errors | default({}, true) | length > 0) | tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='js/goals.js') }}"></script>
+
+{% endblock %}

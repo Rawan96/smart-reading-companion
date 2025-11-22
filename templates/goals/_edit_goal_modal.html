@@ -1,0 +1,65 @@
+<div id="editGoalModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Goal</h3>
+        <span class="close-btn"><i class="fa-solid fa-xmark"></i></span>
+      </div>
+      <p class="modal-desc">Update your reading goal details below.</p>
+
+      <form id="editGoalForm" method="POST" action="{{ url_for('goals.edit_goal') }}">
+        <input type="hidden" name="goal_id" id="edit-goal-id" />
+
+        <div class="form-group">
+          <label for="edit-title">Goal Title *</label>
+          <input type="text" id="edit-title" name="title" value="{{ edit_data.title if edit_data else '' }}" required />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="edit-type">Goal Type</label>
+            <select id="edit-type" name="goal_type">
+              {% for option in ['Daily','Weekly','Monthly','Annual','Custom'] %}
+                <option value="{{ option }}" {% if edit_data and edit_data.goal_type == option %}selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-deadline">Deadline</label>
+            <input type="date" id="edit-deadline" name="deadline" value="{{ edit_data.deadline if edit_data else '' }}"/>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="edit-current">Current Progress</label>
+            <input type="number" id="edit-current" name="current" min="0"   value="{{ edit_data.current | default(0) }}" />
+            <p class="error-msg" id="error-current"></p>
+
+          </div>
+
+          <div class="form-group">
+            <label for="edit-unit">Unit</label>
+            <select name="unit" id="edit-unit" required>
+              {% for option in ['hours','pages','books'] %}
+                <option value="{{ option }}" {% if edit_data and edit_data.unit == option %}selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-target">Target Value</label>
+            <input type="number" id="edit-target" name="target" min="1"        value="{{ edit_data.target | default(1) }}"  />
+            <p class="error-msg" id="error-target">
+              {{ edit_errors.target }}
+          </p>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn primary save">Save Changes</button>
+          <button type="button" class="btn outline cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>

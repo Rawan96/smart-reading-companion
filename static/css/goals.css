@@ -290,9 +290,9 @@
 }
 
 .error-msg {
-  color: red;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  color: #c2410c;
+  font-size: 13px;
+  margin-top: 4px;
 }
 
 .check {
@@ -327,4 +327,13 @@
   margin: 20px;
   width: 90%;
   max-width: 600px;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }

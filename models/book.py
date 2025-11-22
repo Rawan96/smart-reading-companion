@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
 class Book:
-    def __init__(self, title, author, total_pages, pages_read=0, notes=None, quotes=None, reading_sessions=None, cover=None, status="to-read",current_page=0):
+    def __init__(self, title, author, total_pages, pages_read=0, reading_sessions=None, cover=None, status="to-read",current_page=0):
         self.title = title
         self.author = author
         self.total_pages = total_pages
@@ -9,8 +9,6 @@ class Book:
         self.status = status
         self.current_page = current_page
         self.cover = cover
-        self.notes = notes or []
-        self.quotes = quotes or []
         self.reading_sessions = reading_sessions or []
 
 
@@ -61,17 +59,6 @@ class Book:
                     "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 })
 
-    def add_note(self, text):
-        self.notes.append(text)
-
-    def add_quote(self, text):
-        self.quotes.append(text)
-
-    def progress_percentage(self):
-        if self.total_pages == 0:
-            return 0
-        return round((self.pages_read / self.total_pages) * 100, 1)
-
     def to_dict(self):
         return {
             "title": self.title,
@@ -81,8 +68,6 @@ class Book:
             "pages_read": self.pages_read,
             "status": self.status,
             "current_page": self.current_page,
-            "notes": self.notes,
-            "quotes": self.quotes,
             "reading_sessions": self.reading_sessions
         }
 
@@ -97,7 +82,5 @@ class Book:
             pages_read=data.get("pages_read", 0),
             status=data.get("status", "to-read"),
             current_page=data.get("current_page", 0),
-            notes=data.get("notes", []),
-            quotes=data.get("quotes", []),
             reading_sessions=data.get("reading_sessions", [])
         )

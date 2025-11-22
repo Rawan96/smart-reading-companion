@@ -1,51 +1,77 @@
-const addGoalBtn = document.getElementById("addGoalBtn");
-const addGoalForm = document.getElementById("addGoalForm");
-const cancelGoalBtn = document.getElementById("cancelGoalBtn");
+document.addEventListener("DOMContentLoaded", () => {
+    const addGoalBtn = document.getElementById("addGoalBtn");
+    const addGoalCard = document.getElementById("addGoalCard");
+    const cancelGoalBtn = document.getElementById("cancelGoalBtn");
+    const editGoalForm = document.getElementById("editGoalForm");
 
-if (addGoalBtn && addGoalForm && cancelGoalBtn) {
-    addGoalBtn.addEventListener("click", () => {
-        addGoalForm.style.display = "block";
-        addGoalBtn.style.display = "none";
-    });
-
-    cancelGoalBtn.addEventListener("click", () => {
-        addGoalForm.style.display = "none";
-        addGoalBtn.style.display = "inline-block";
-    });
-}
-
-function openEditForm(goalId, title, type, target, deadline, progress) {
-    const hid = document.getElementById("edit-goal-id");
-    if (hid) hid.value = goalId || "";
-
-    document.getElementById("edit-title").value = title || "";
-    document.getElementById("edit-type").value = type || "Custom";
-    document.getElementById("edit-deadline").value = deadline || "";
-    document.getElementById("edit-current").value = (typeof progress !== "undefined") ? progress : 0;
-    document.getElementById("edit-target").value = target || "";
-
-    const modal = document.getElementById("editGoalModal");
-    if (modal) modal.style.display = "block";
-}
-
-function closeModal() {
-    const modal = document.getElementById("editGoalModal");
-    if (modal) modal.style.display = "none";
-}
-
-window.addEventListener("click", function (event) {
-    const modal = document.getElementById("editGoalModal");
-    if (event.target === modal) {
-        closeModal();
+    if (addGoalBtn && addGoalCard && cancelGoalBtn) {
+        addGoalBtn.onclick = () => {
+            addGoalCard.style.display = "block";
+            addGoalBtn.style.display = "none";
+        };
+        cancelGoalBtn.onclick = () => {
+            addGoalCard.style.display = "none";
+            addGoalBtn.style.display = "inline-block";
+        };
     }
+
+    if (window.addErrors && Object.keys(window.addErrors).length > 0) {
+        addGoalCard.style.display = "block";
+        addGoalBtn.style.display = "none";
+    }
+
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const goal = window.goalsData.find(g => g.id === btn.dataset.goalId);
+            console.log(window)
+            if (!goal) return;
+
+            document.getElementById("edit-goal-id").value = goal.id;
+            document.getElementById("edit-title").value = goal.title;
+            document.getElementById("edit-type").value = goal.goal_type;
+            document.getElementById("edit-unit").value = goal.unit;
+            document.getElementById("edit-target").value = goal.target_value || 0;
+            document.getElementById("edit-current").value = goal.progress || 0;
+            document.getElementById("edit-deadline").value = goal.deadline || "";
+
+            document.getElementById("editGoalModal").style.display = "block";
+        });
+    });
+
+    document.querySelectorAll(".close-btn, .btn.cancel").forEach(btn => {
+        btn.onclick = () => {
+            document.getElementById("editGoalModal").style.display = "none";
+        };
+    });
+
+    const showErrors = (errors) => {
+        document.querySelectorAll("#editGoalForm .error-msg").forEach(el => el.textContent = "");
+        for (const key in errors) {
+            const el = document.getElementById("error-" + key);
+            if (el) el.textContent = errors[key];
+        }
+    };
+
+    if (editGoalForm) {
+        editGoalForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(editGoalForm);
+            const response = await fetch(editGoalForm.action, {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.reload();
+            } else if (data.errors) {
+                showErrors(data.errors);
+            }
+        });
+    }
+
+
+
 });
-
-
-const addGoalType = document.getElementById("goal-type");
-const addDeadline = document.getElementById("deadline-input");
-
-function toggleDeadline() {
-    addDeadline.disabled = addGoalType.value !== "Custom";
-}
-addGoalType.addEventListener("change", toggleDeadline);
-toggleDeadline();

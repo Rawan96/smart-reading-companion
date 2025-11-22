@@ -1,0 +1,67 @@
+<div class="card {% if goal.completed %}completed-card{% endif %}">
+  <div class="action-header">
+    <div class="goal-subheader">
+      <div>
+        <span class="goal-icon">
+          {% if goal.unit == "books" %}
+          <i class="fa-solid fa-book-open target-icon"></i>
+          {% elif goal.unit == "pages" %}
+          <i class="fa-solid fa-bullseye target-icon"></i>
+          {% elif goal.unit == "hours" %}
+          <i class="fa-regular fa-clock target-icon"></i>
+          {% endif %}
+        </span>
+      </div>
+      <div>
+        <p class="title">{{ goal.title }}</p>
+        <span class="badge">{{ goal.goal_type|lower }}</span>
+        {% if goal.deadline %}<span class="muted">Due: {{ goal.deadline }}</span
+        >{% endif %}
+      </div>
+    </div>
+
+    <div class="actions">
+      <button
+        type="button"
+        class="icon-btn edit-btn"
+        title="Edit Goal"
+        data-goal-id="{{ goal.id }}"
+      >
+        <i class="fa-solid fa-pen"></i>
+      </button>
+      <form
+        method="POST"
+        action="{{ url_for('goals.delete_goal') }}"
+        style="display: inline-block"
+      >
+        <input type="hidden" name="goal_id" value="{{ goal.id }}" />
+        <button type="submit" class="icon-btn" title="Delete Goal">
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="sub-container">
+    <div class="progress-header">
+      <span class="current-progress">
+        <p>
+          Progress: {{ goal.progress }} / {{ goal.target_value }} {{ goal.unit
+          if goal.unit else 'books' }}
+        </p>
+      </span>
+      <span class="progress-percent"
+        >{{ ((goal.progress / goal.target_value) * 100)|int }}%</span
+      >
+    </div>
+    <div class="progress-bar">
+      <div
+        class="progress-fill"
+        style="width: {{ (goal.progress / goal.target_value * 100)|round(0) }}%"
+      ></div>
+    </div>
+    <p class="remaining-text">
+      {{ goal.target_value - goal.progress }} {{ goal.unit }} remaining
+    </p>
+  </div>
+</div>

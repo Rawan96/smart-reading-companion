@@ -144,17 +144,7 @@ def book_detail(title):
     days_reading = len(dates)
 
     if request.method == 'POST':
-        note_text = request.form.get('note')
-        quote_text = request.form.get('quote')
         pages_str = request.form.get('pages_read')
-
-        if note_text:
-            book.add_note(note_text)
-            flash("Note added successfully!", "success")
-
-        if quote_text:
-            book.add_quote(quote_text)
-            flash("Quote added successfully!", "success")
 
         if pages_str:
             try:

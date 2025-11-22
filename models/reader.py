@@ -52,52 +52,51 @@ class Reader:
                     )
         return None
 
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "email": self.email.lower(),
+            "password": self.password_hash,
+            "books": [b.to_dict() for b in self.books],
+            "reading_log": self.reading_log,
+            "goals": [g.to_dict() for g in self.goals]
+        }
+
     def save_reader(self):
         try:
-            with open("users.json", "r") as f:
+            with open(BOOKS_FILE, "r") as f:
                 users = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             users = []
 
-        for u in users:
+        for i, u in enumerate(users):
             if u.get("email") == self.email:
-                u["name"] = self.name
-                u["password"] = self.password_hash
-                u["books"] = [b.to_dict() for b in self.books]
-                u["reading_log"] = self.reading_log
-                u["goals"] = [g.to_dict() for g in self.goals]
+                users[i] = self.to_dict()
                 break
         else:
-            users.append({
-                "name": self.name,
-                "email": self.email.lower(),
-                "password": self.password_hash,
-                "books": [b.to_dict() for b in self.books],
-                "reading_log": self.reading_log,
-                "goals": [g.to_dict() for g in self.goals]
-            })
+            users.append(self.to_dict())
 
-        with open("users.json", "w") as f:
+        with open(BOOKS_FILE, "w") as f:
             json.dump(users, f, indent=4)
 
 
-    def add_goal(self, title, goal_type, target_value, deadline=None):
+    def add_goal(self, title,unit, goal_type, target_value, deadline=None ):
         goal = Goal(
             title=title,
+            unit=unit,
             goal_type=goal_type,
             target_value=target_value,
             deadline=deadline,
             progress=0,
             completed=False,
-            completed_at=None
+            completed_at=None,
         )
-
+        deadline = deadline or Goal.default_deadline(goal_type)
         goal.update_completion()
 
         self.goals.append(goal)
         self.save_reader()
-
-
 
     def find_goal_by_id(self, goal_id):
         return next((g for g in self.goals if getattr(g, "id", None) == goal_id), None)
@@ -110,7 +109,7 @@ class Reader:
         self.save_reader()
         return True
 
-    def edit_goal_by_id(self, goal_id, title=None, goal_type=None, target_value=None, deadline=None, progress=None):
+    def edit_goal_by_id(self, goal_id, title=None, goal_type=None, target_value=None, deadline=None, progress=None,unit=None):
         goal = self.find_goal_by_id(goal_id)
         if not goal:
             return False
@@ -126,11 +125,11 @@ class Reader:
             goal.deadline = deadline
         if progress is not None:
             goal.progress = progress
+        if unit is not None:
+            goal.unit = unit
         goal.update_completion()
         self.save_reader()
         return True
-
-
 
 
     def load_books(self):
@@ -179,8 +178,6 @@ class Reader:
 
         self.save_books()
         return True
-
-
 
     @staticmethod
     def load_reader(email):

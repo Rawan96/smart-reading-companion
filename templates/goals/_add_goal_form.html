@@ -1,0 +1,55 @@
+<div class="card form-card" id="addGoalCard" style="display: none">
+    <h3>Create New Goal</h3>
+
+    <form method="POST" action="{{ url_for('goals.goals') }}" id="addGoalForm">
+      <div class="form-grid">
+        <div>
+          <label>Goal Title</label>
+          <input type="text" name="title" placeholder="e.g., Read 10 books this quarter"
+                 required value="{{ add_data.title if add_data else '' }}">
+          {% if add_errors and add_errors.title %}
+          <p class="error-msg">{{ add_errors.title }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label>Goal Type</label>
+          <select name="goal_type">
+            {% for option in ['Daily','Weekly','Monthly','Annual','Custom'] %}
+              <option value="{{ option }}" {% if add_data and add_data.goal_type == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label>Unit</label>
+          <select name="unit" required>
+            {% for option in ['hours','pages','books'] %}
+              <option value="{{ option }}" {% if add_data and add_data.unit == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label>Target Value</label>
+          <input type="number" name="target_value" placeholder="e.g., 10" value="{{ add_data.target_value if add_data else '' }}" required>
+          {% if add_errors and add_errors.target_value %}
+          <p class="error-msg">{{ add_errors.target_value }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label>Deadline</label>
+          <input type="date" name="deadline" value="{{ add_data.deadline if add_data else '' }}">
+          {% if add_errors and add_errors.deadline %}
+          <p class="error-msg">{{ add_errors.deadline }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn primary" type="submit">Create Goal</button>
+        <button class="btn outline" id="cancelGoalBtn" type="button">Cancel</button>
+      </div>
+    </form>
+  </div>

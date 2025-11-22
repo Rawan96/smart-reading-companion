@@ -1,0 +1,16 @@
+<div class="card completed-card">
+  <div class="completed-container">
+    <div class="icon-completed-goal-container">
+      <i class="fa-solid fa-check check"></i>
+    </div>
+
+    <div>
+      <h4>{{ goal.title.capitalize() }}</h4>
+
+      <p class="muted">
+        {{ goal.progress }} / {{ goal.target_value }} • Completed on {{
+        goal.completed_at }}
+      </p>
+    </div>
+  </div>
+</div>
