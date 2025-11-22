@@ -21,11 +21,11 @@
     {% for goal in active_goals %} {% include "goals/_goal_card.html" %} {%
     endfor %}
   </div>
-  {% endif %} {% set completed_goals = goals | selectattr('completed',
-  'equalto', True) | list %} {% if completed_goals %}
+  {% set completed_goals = goals | selectattr('completed', 'equalto', True) |
+  list %} {% set last_three_goals = completed_goals[::-1][:3] %}
   <h2 class="completed-goal">Completed Goals</h2>
   <div class="completed-card-parent">
-    {% for goal in completed_goals %} {% include
+    {% for goal in last_three_goals %} {% include
     "goals/_goal_card_completed.html" %} {% endfor %}
   </div>
   {% endif %} {% include "goals/_edit_goal_modal.html" %}
