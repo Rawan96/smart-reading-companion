@@ -12,52 +12,42 @@ class Book:
         self.reading_sessions = reading_sessions or []
 
 
-    def add_pages(self, pages):
-        pages = int(pages)
-
-        max_allowed = self.total_pages - self.pages_read
-        pages = min(pages, max_allowed)
-
-        if pages <= 0:
-            return
-
-        self.pages_read += pages
-        self.current_page = self.pages_read
-
-        self.reading_sessions.append({
-            "pages": pages,
-            "date": str(date.today())
-        })
-
     def set_current_page(self, page, reader=None):
         if page < 0:
             page = 0
         if page > self.total_pages:
             page = self.total_pages
 
-        pages_added = max(0, page - self.pages_read)
+        old_pages = self.pages_read
 
-        self.current_page = page
-        if self.status != "to-read":
-            self.pages_read = max(self.pages_read, page)
-        else:
-            self.pages_read = 0
-
-        if pages_added > 0:
+        if page > old_pages:
+            pages_to_add = page - old_pages
             today_str = str(date.today())
             for session in self.reading_sessions:
                 if session["date"] == today_str:
-                    session["pages"] += pages_added
+                    session["pages"] += pages_to_add
                     break
             else:
-                self.reading_sessions.append({"date": today_str, "pages": pages_added})
+                self.reading_sessions.append({"pages": pages_to_add, "date": today_str})
 
-            if reader:
-                reader.reading_log.append({
-                    "book": self.title,
-                    "pages": pages_added,
-                    "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                })
+        elif page < old_pages:
+            pages_to_remove = old_pages - page
+            i = len(self.reading_sessions) - 1
+            while pages_to_remove > 0 and i >= 0:
+                session = self.reading_sessions[i]
+                if session["pages"] <= pages_to_remove:
+                    pages_to_remove -= session["pages"]
+                    self.reading_sessions.pop(i)
+                else:
+                    session["pages"] -= pages_to_remove
+                    pages_to_remove = 0
+                i -= 1
+
+        self.pages_read = page
+        self.current_page = page
+
+        if reader:
+            reader.save_reader()
 
     def to_dict(self):
         return {

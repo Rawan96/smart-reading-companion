@@ -10,12 +10,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 BOOKS_FILE = "users.json"
 
 class Reader:
-    def __init__(self,  name, email, password_hash=None, books=None,reading_log=None, goals=None):
+    def __init__(self,  name, email, password_hash=None, books=None, goals=None):
         self.name = name
         self.email = email
         self.password_hash = password_hash
         self.books = books if books else []
-        self.reading_log = reading_log if reading_log else []
         self.goals = [Goal.from_dict(g) for g in (goals or [])]
 
 
@@ -47,7 +46,6 @@ class Reader:
                     email=u["email"],
                     password_hash=u.get("password"),
                     books=[Book.from_dict(b) for b in u.get("books", [])],
-                    reading_log=u.get("reading_log", []),
                     goals=u.get("goals", [])
                     )
         return None
@@ -59,7 +57,6 @@ class Reader:
             "email": self.email.lower(),
             "password": self.password_hash,
             "books": [b.to_dict() for b in self.books],
-            "reading_log": self.reading_log,
             "goals": [g.to_dict() for g in self.goals]
         }
 
@@ -131,25 +128,11 @@ class Reader:
         self.save_reader()
         return True
 
-
-    def load_books(self):
-        try:
-            with open(BOOKS_FILE, "r") as f:
-                data = json.load(f)
-                self.books = [Book.from_dict(b) for b in data]
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.books = []
-
-    def save_books(self):
-        with open(BOOKS_FILE, "w") as f:
-            json.dump([b.to_dict() for b in self.books], f, indent=4)
-
-    def add_book(self, title, author, total_pages, genre):
-        if any(b.title == title for b in self.books):
+    def add_book(self, book: Book):
+        if any(b.title == book.title for b in self.books):
             return False
-        new_book = Book(title, author, total_pages, genre)
-        self.books.append(new_book)
-        self.save_books()
+        self.books.append(book)
+        self.save_reader()
         return True
 
     def find_book(self, title):
@@ -157,27 +140,8 @@ class Reader:
 
     def delete_book(self, title):
         self.books = [b for b in self.books if b.title != title]
-        self.save_books()
+        self.save_reader()
 
-    def log_reading(self, title, pages):
-        if pages <= 0:
-            raise ValueError("Pages must be positive")
-
-        book = self.find_book(title)
-        if not book:
-            return False
-
-
-        book.add_pages(pages)
-
-        self.reading_log.append({
-            "book": title,
-            "pages": pages,
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
-
-        self.save_books()
-        return True
 
     @staticmethod
     def load_reader(email):
@@ -194,7 +158,6 @@ class Reader:
                     email=u["email"],
                     password_hash=u.get("password"),
                     books=[Book.from_dict(b) for b in u.get("books", [])],
-                    reading_log=u.get("reading_log", []),
                     goals=u.get("goals", [])
                 )
         return None

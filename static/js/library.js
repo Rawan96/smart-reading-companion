@@ -100,10 +100,6 @@ searchInput.addEventListener("input", function () {
     });
 });
 
-// Open modal when editing
-if (window.hasOwnProperty('edit_book') || document.querySelectorAll("[data-edit-book]").length) {
-  if (modal) modal.style.display = "block";
-}
 
 const filterButtons = document.querySelectorAll(".filter-btn");
 

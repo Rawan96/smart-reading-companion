@@ -76,7 +76,6 @@ def dashboard():
         'dashboard.html',
         analytics=analytics,
         books=reader.books,
-        reading_log=reader.reading_log,
         stats=stats,
         name=reader.name
     )
