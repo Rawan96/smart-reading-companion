@@ -99,8 +99,6 @@ Add app screenshots here to showcase the main experience.
 
 ## Demo Video
 
-Add a short Loom walkthrough here if you want a quick product demo:
-
 ```text
-https://www.loom.com/share/397bd1fbd5b74919904a47107270e23f
+https://www.loom.com/share/a31c95f1ddcd46868f1902909b637328
 ```
