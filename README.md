@@ -1,66 +1,106 @@
-# smart-reading-companion
+# Smart Reading Companion
 
-A web application that allows users to track their reading journey, manage their books, update reading progress, and view reading analytics.
-The new feature implemented is a **reading session tracker** that automatically logs session details (date, pages read, and progress updates) to help readers visualize their reading habits.
+[![Flask](https://img.shields.io/badge/Flask-3.0-black?logo=flask)](https://flask.palletsprojects.com/)
+[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Jinja](https://img.shields.io/badge/Jinja-Templates-b41717)](https://jinja.palletsprojects.com/)
 
-## Prerequisites
+Smart Reading Companion is a Flask-based reading tracker that helps users manage their library, monitor reading progress, and review personal reading insights from a dashboard.
 
-Did you add any additional modules that someone needs to
-install (for instance anything in Python that you `pip
-install-ed`)?
-List those here (if any).
+## Overview
 
-## Project Checklist
+The application provides a focused workflow for readers who want to:
 
-- [x] It is available on GitHub.
-- [x] It uses the Flask web framework.
-- [x] It uses at least one module from the Python Standard
-      Library other than the random module.
-      Please provide the name of the module you are using in your
-      app.
-- Module name: json, os, and datetime.
-- [x] It contains at least one class written by you that has
-      both properties and methods. It uses `__init__()` to let the
-      class initialize the object's attributes (note that
-      `__init__()` doesn't count as a method). This includes
-      instantiating the class and using the methods in your app.
-      Please provide below the file name and the line number(s) of
-      at least one example of a class definition in your code as
-      well as the names of two properties and two methods.
-- File name for the class definition: models/book.py, models/reader.py, and models/analytics.
-- Line number(s) for the class definition: 3, 12, and 4.
-- Name of two properties: name, email.
-- Name of two methods: create_user and save_reader.
-- File name and line numbers where the methods are used: routes/auth.py/sign_up line 20, routes/book.by/add_book line 36
-- [x] It makes use of JavaScript in the front end and uses the
-  localStorage of the web browser.
-- [x] It uses modern JavaScript (for example, let and const
-  rather than var).
-- [x] It makes use of the reading and writing to the same file
-  feature.
-- [x] It contains conditional statements. Please provide below
-  the file name and the line number(s) of at least
-  one example of a conditional statement in your code.
-- File name: routes/book.by/add_book
-- Line number(s): 30
-- [x] It contains loops. Please provide below the file name
-  and the line number(s) of at least
-  one example of a loop in your code.
-- File name:models/reader.py
-- Line number(s): 43
-- [x] It lets the user enter a value in a text box at some
-  point.
-  This value is received and processed by your back end
-  Python code.
-- [x] It doesn't generate any error message even if the user
-  enters a wrong input.
-- [x] It is styled using your own CSS.
-- [x] The code follows the code and style conventions as
-  introduced in the course, is fully documented using comments
-  and doesn't contain unused or experimental code.
-  In particular, the code should not use `print()` or
-  `console.log()` for any information the app user should see.
-  Instead, all user feedback needs to be visible in the
-  browser.
-- [x] All exercises have been completed as per the
-  requirements and pushed to the respective GitHub repository.
+- organize books in a personal library
+- track page-by-page progress
+- log reading sessions automatically
+- set and manage reading goals
+- review reading statistics and trends
+
+## Key Features
+
+- Secure sign-up, sign-in, and logout
+- Book library with add, edit, delete, and search support
+- Book detail pages with progress updates and session history
+- Goal tracking for daily, weekly, monthly, and annual targets
+- Dashboard analytics for total books, pages read, completion rate, and monthly activity
+- Persistent browser preferences for library view and filtering
+
+## Tech Stack
+
+- Python
+- Flask
+- Jinja templates
+- JavaScript
+- HTML and CSS
+- JSON file storage
+
+## Requirements
+
+- Python 3.9+
+- Flask
+
+## Setup
+
+Create a virtual environment and install Flask:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install Flask
+```
+
+## Run
+
+Start the application from the project root:
+
+```bash
+python app.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:5000
+```
+
+## Data Storage
+
+All app data is stored in [`users.json`](./users.json), including:
+
+- user profiles
+- password hashes
+- books and reading progress
+- reading sessions
+- goals
+
+## Project Layout
+
+```text
+.
+├── app.py
+├── models/
+├── routes/
+├── static/
+├── templates/
+├── utils/
+└── users.json
+```
+
+
+
+## Screenshots
+
+Add app screenshots here to showcase the main experience.
+
+| Dashboard | Library |
+| --- | --- |
+| ![Dashboard](./static/images/dashboard.png) | ![Library](./static/images/library.png) |
+
+
+## Demo Video
+
+Add a short Loom walkthrough here if you want a quick product demo:
+
+```text
+https://www.loom.com/share/397bd1fbd5b74919904a47107270e23f
+```
